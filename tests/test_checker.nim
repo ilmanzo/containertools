@@ -5,6 +5,7 @@
 import unittest2
 import containertools
 
+
 suite "Basic self-check test":
   test "container without FROM should not be valid":
     let image = container:

@@ -1,7 +1,7 @@
 import macros except body
-from std/strutils import join, format, split
+from std/strutils import join, format, split, strip, parseEnum
 import std/sequtils
-import std/sugar
+
 
 type
   ContainerInstruction = enum
@@ -78,3 +78,12 @@ template container*(instructions: untyped): ContainerSpec =
   var spec {.inject.}: ContainerSpec
   instructions
   spec
+
+proc fromFile*(filename: string): ContainerSpec =
+  for line in filename.lines:
+    let tokens = line.strip().split(' ', 2)
+    let instr = parseEnum[ContainerInstruction](tokens[0])
+    result.add((instr, ArgValue(kind: string, svalue: tokens[1])))
+
+
+
