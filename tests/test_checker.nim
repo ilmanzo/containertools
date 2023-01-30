@@ -8,8 +8,17 @@ import containertools
 suite "Basic self-check test":
   test "container without FROM should not be valid":
     let image = container:
-      RUN "hello, world"
+      CMD "hello, world"
       ENV "foo=bar"
     check: not image.isValid
+
+  test "container without CMD nor ENTRYPOINT should not be valid":
+    let image = container:
+      FROM "opensuse/leap"
+      LABEL "foo=bar"
+      ENV "foo=bar"
+    check: not image.isValid
+
+
 
 

@@ -39,12 +39,16 @@ proc `$`*(self: ContainerSpec): string =
         tmpout.add("$1 $2".format(item.instr, outvalue))
   tmpout.join("\n")
 
+# checks presence of FROM and one of CMD,ENTRYPOINT
 proc isValid*(self: ContainerSpec): bool =
-  # check presence of at least one FROM statement
-  if not self.any(x => (x.instr == FROM)):
-    return false
-  return true
-
+  var foundFROM: bool = false
+  var foundCMD_or_ENTRYPOINT: bool = false
+  for item in self:
+    case item.instr
+      of FROM: foundFROM = true
+      of CMD, ENTRYPOINT: foundCMD_or_ENTRYPOINT = true
+      else: continue
+  result = foundFROM and foundCMD_or_ENTRYPOINT
 
 # instead of writing a bunch of templates, like
 #
