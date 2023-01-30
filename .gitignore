@@ -1,4 +1,8 @@
 nimcache/
 nimblecache/
 htmldocs/
-tests/test_dsl
+# ignore any binaries but include test source code
+tests/*
+!tests/*.nim*
+
+

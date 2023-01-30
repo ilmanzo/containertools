@@ -8,10 +8,15 @@
 import unittest2
 import containertools
 from strutils import splitLines
+from sequtils import zip
 
 # helper to compare two spec files avoiding newline issues
 proc equalToReference(image: string, sourceFile: string): bool =
-  image.splitLines == sourceFile.readFile.splitLines
+  for item in zip(image.splitLines, sourceFile.readFile.splitLines):
+    if item[0] != item[1]:
+      echo "expected:", item[1], "got:", item[0]
+      return false
+  return true
 
 
 suite "Basic dsl test":
@@ -19,7 +24,7 @@ suite "Basic dsl test":
     let image = containerSpec:
       FROM "opensuse/leap"
       CMD "echo Hello" # commands will be auto-splitted in an array
-    check: image.equalToReference("reference/Dockerfile.hello")
+    check: image.equalToReference("reference/Containerfile.hello")
 
   test "can create containers with exposed port":
     let image = containerSpec:
@@ -28,7 +33,17 @@ suite "Basic dsl test":
       RUN "npm install"
       EXPOSE 3000
       CMD @["node", "index.js"]
-    check: image.equalToReference("reference/Dockerfile.unoptimized.nodejs")
+    check: image.equalToReference("reference/Containerfile.unoptimized.nodejs")
+
+  test "can create image with env variables":
+    let image = containerSpec:
+      FROM "busybox"
+      ENV "FOO=/bar"
+      WORKDIR "${FOO}"
+      ADD ". $FOO"
+      COPY "$FOO /quux"
+    check: image.equalToReference("reference/Containerfile.withenv")
+
 
 
 
