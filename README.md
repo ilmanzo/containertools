@@ -7,7 +7,7 @@ starting develoment as a HackWeek project : https://hackweek.opensuse.org/22/pro
 
 ```nim
 import containertools
-let image = containerSpec:
+let image = container:
     FROM "opensuse/leap"
     CMD "echo Hello"
 
@@ -17,7 +17,7 @@ image.build
 
 ```nim
 import containertools
-let image = containerSpec:
+let image = container:
     FROM "node:16"
     COPY ". ."
     RUN "npm install"
