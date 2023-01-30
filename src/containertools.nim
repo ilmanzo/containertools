@@ -1,6 +1,7 @@
 import macros except body
 from std/strutils import join, format, split
-from sequtils import mapIt
+import std/sequtils
+import std/sugar
 
 type
   ContainerInstruction = enum
@@ -15,31 +16,34 @@ type
       svalue: string
     of openArray:
       avalue: seq[string]
-  InstructionTuple = tuple[c: ContainerInstruction, v: ArgValue]
+  InstructionTuple = tuple[instr: ContainerInstruction, arg: ArgValue]
 
-  Spec = object
-    instructions: seq[InstructionTuple]
-    entrypoint: string
-    baseImage: string
+  ContainerSpec* = seq[InstructionTuple]
 
-proc parseSpec*(spec: string): Spec =
+proc parseSpec*(spec: string): ContainerSpec =
   discard
 
 # returns string representation of a container image
-proc `$`*(self: Spec): string =
+proc `$`*(self: ContainerSpec): string =
   var tmpout: seq[string]
-  for item in self.instructions:
-    let value = item.v
-    let outvalue = case value.kind
-      of uint16: $value.ivalue
-      of string: value.svalue
-      of openArray: "[" & value.avalue.mapit('"' & $it & '\"').join(",") & "]"
-    case item.c:
+  for item in self:
+    let argvalue = item.arg
+    let outvalue = case argvalue.kind
+      of uint16: $argvalue.ivalue
+      of string: argvalue.svalue
+      of openArray: "[" & argvalue.avalue.mapit('"' & $it & '\"').join(",") & "]"
+    case item.instr:
       of COMMENT:
         tmpout.add("# $1".format(outvalue))
       else:
-        tmpout.add("$1 $2".format(item.c, outvalue))
+        tmpout.add("$1 $2".format(item.instr, outvalue))
   tmpout.join("\n")
+
+proc isValid*(self: ContainerSpec): bool =
+  # check presence of at least one FROM statement
+  if not self.any(x => (x.instr == FROM)):
+    return false
+  return true
 
 
 # instead of writing a bunch of templates, like
@@ -54,19 +58,19 @@ macro autoGenAllTheTemplates() =
     if item == EXPOSE or item == CMD:
       continue
     let cmd = $item
-    allTemplates.add "template $1*(value: string) = spec.instructions.add ($1,ArgValue(kind: string, svalue: value))\n".format(cmd)
+    allTemplates.add "template $1*(value: string) = spec.add ($1,ArgValue(kind: string, svalue: value))\n".format(cmd)
   parseStmt allTemplates
 
 autoGenAllTheTemplates()
 # some commands have special cases for argument type
 template EXPOSE*(port: uint16) =
-  spec.instructions.add (EXPOSE, ArgValue(kind: uint16, ivalue: port))
+  spec.add (EXPOSE, ArgValue(kind: uint16, ivalue: port))
 template CMD*(items: openArray) =
-  spec.instructions.add (CMD, ArgValue(kind: openArray, avalue: items))
+  spec.add (CMD, ArgValue(kind: openArray, avalue: items))
 template CMD*(arg: string) =
-  spec.instructions.add (CMD, ArgValue(kind: openArray, avalue: arg.split))
+  spec.add (CMD, ArgValue(kind: openArray, avalue: arg.split))
 
-template containerSpec*(instructions: untyped): string =
-  var spec {.inject.}: Spec
+template container*(instructions: untyped): ContainerSpec =
+  var spec {.inject.}: ContainerSpec
   instructions
-  $spec
+  spec

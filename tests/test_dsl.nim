@@ -11,8 +11,9 @@ from strutils import splitLines
 from sequtils import zip
 
 # helper to compare two spec files avoiding newline issues
-proc equalToReference(image: string, sourceFile: string): bool =
-  for item in zip(image.splitLines, sourceFile.readFile.splitLines):
+proc equalToReference(image: ContainerSpec, sourceFile: string): bool =
+  let spec = $image
+  for item in zip(spec.splitLines, sourceFile.readFile.splitLines):
     if item[0] != item[1]:
       echo "expected:", item[1], "got:", item[0]
       return false
@@ -21,13 +22,13 @@ proc equalToReference(image: string, sourceFile: string): bool =
 
 suite "Basic dsl test":
   test "can create basic container":
-    let image = containerSpec:
+    let image = container:
       FROM "opensuse/leap"
       CMD "echo Hello" # commands will be auto-splitted in an array
     check: image.equalToReference("reference/Containerfile.hello")
 
   test "can create containers with exposed port":
-    let image = containerSpec:
+    let image = container:
       FROM "node:16"
       COPY ". ."
       RUN "npm install"
@@ -36,13 +37,15 @@ suite "Basic dsl test":
     check: image.equalToReference("reference/Containerfile.unoptimized.nodejs")
 
   test "can create image with env variables":
-    let image = containerSpec:
+    let image = container:
       FROM "busybox"
       ENV "FOO=/bar"
       WORKDIR "${FOO}"
       ADD ". $FOO"
       COPY "$FOO /quux"
     check: image.equalToReference("reference/Containerfile.withenv")
+
+  
 
 
 
