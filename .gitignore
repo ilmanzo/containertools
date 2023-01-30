@@ -1,1 +1,4 @@
+nimcache/
+nimblecache/
+htmldocs/
 tests/test_dsl
