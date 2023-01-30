@@ -12,7 +12,17 @@ suite "Basic dsl test":
   test "can create basic container":
     let image = containerSpec:
       FROM "opensuse/leap"
-      CMD "echo Hello"
-    check: image == readFile "examples/Dockerfile.hello"
+      CMD "echo Hello" # commands will be auto-splitted in an array
+    check: image == readFile "reference/Dockerfile.hello"
+
+  test "can create containers with exposed port":
+    let image = containerSpec:
+      FROM "node:16"
+      COPY ". ."
+      RUN "npm install"
+      EXPOSE 3000
+      CMD @["node", "index.js"]
+    check: image == readFile "reference/Dockerfile.unoptimized.nodejs"
+
 
 

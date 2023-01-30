@@ -1,0 +1,2 @@
+FROM opensuse/leap
+CMD ["echo","Hello"]
