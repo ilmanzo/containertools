@@ -1,7 +1,7 @@
 ## Todo
 
 - [ ] implement Containerfile, Dockerfile parsing
-  - [ ] improve parsing, COMMENT should become #
+  - [x] improve parsing, COMMENT should become #
 - [ ] tidy: remove duplicates, ex. merge consequent "RUN" lines
 - [ ] add save feature
 - [ ] add build feature that permits to run our image
@@ -11,7 +11,6 @@
   - some examples:  https://github.com/marquesmps/dockerfile_validator/blob/develop/src/rule_files/default_rules.yaml
   - https://github.com/hadolint/hadolint
 - [ ] check for leaked secrets in ENV
-
 
 ## In progress
 

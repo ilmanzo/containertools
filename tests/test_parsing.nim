@@ -20,4 +20,14 @@ suite "Basic parsing test":
       CMD "echo Hello" # commands will be auto-splitted in an array
     check: image1.equal image2
 
+  test "can parse containerfile with comments":
+    let image1 = fromFile("reference/Containerfile.with_comments")
+    let image2 = container:
+      COMMENT "this is a simple containerfile"
+      FROM "opensuse/leap"
+      COMMENT "with comments added"
+      CMD "echo Hello" # commands will be auto-splitted in an array
+    check: image1.equal image2
+
+
 

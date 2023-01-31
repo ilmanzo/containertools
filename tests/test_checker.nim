@@ -20,6 +20,15 @@ suite "Basic self-check test":
       ENV "foo=bar"
     check: not image.isValid
 
+  test "container with FROM as not-first statement should not be valid":
+    let image = container:
+      RUN "/bin/bash"
+      FROM "ubuntu"
+      CMD @["/usr/bin/wc", "--help"]
+    check: not image.isValid
+
+
+
 
 
 

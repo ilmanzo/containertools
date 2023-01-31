@@ -7,8 +7,9 @@
 
 import unittest2
 import containertools
-from strutils import splitLines
+import strutils
 from sequtils import zip
+import std/strformat
 
 # helper to compare two spec files avoiding newline issues
 proc equalToReference(image: ContainerSpec, sourceFile: string): bool =
@@ -24,7 +25,7 @@ suite "Basic dsl test":
   test "can create basic container":
     let image = container:
       FROM "opensuse/leap"
-      CMD "echo Hello" # commands will be auto-splitted in an array
+      CMD "echo Hello" # CMD will be auto-splitted in an array
     check: image.equalToReference("reference/Containerfile.hello")
 
   test "can create containers with exposed port":
@@ -45,7 +46,33 @@ suite "Basic dsl test":
       COPY "$FOO /quux"
     check: image.equalToReference("reference/Containerfile.withenv")
 
-  
+suite "Dynamic dsl test":
+  test "can make conditional containers":
+    var images = newSeq[ContainerSpec](4)
+    for i in countup(0, 3):
+      images[i] = container:
+        FROM "opensuse/leap"
+        if i mod 2 == 0:
+          ENV &"buildno={i}.0"
+          LABEL "Environment=PROD"
+          RUN "zypper install nginx-stable"
+        else:
+          ENV &"buildno={i}.1"
+          LABEL "Environment=DEV"
+          RUN "zypper install nginx-testing"
+    check: images.len == 4
+    let referenceobj = SpecItem(instr: BuildInstruction.LABEL, kind: Ak_string,
+        str_val: "Environment=PROD")
+    check: images[0][2] == referenceobj
+
+
+
+
+
+
+
+
+
 
 
 
