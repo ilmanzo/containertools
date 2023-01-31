@@ -1,9 +1,6 @@
 ## Todo
 
-- [ ] implement Containerfile, Dockerfile parsing
-  - [x] improve parsing, COMMENT should become #
 - [ ] tidy: remove duplicates, ex. merge consequent "RUN" lines
-- [ ] add save feature
 - [ ] add build feature that permits to run our image
   - remember to use -p for any EXPOSEd port
 - [ ] add example and documentation
@@ -23,6 +20,10 @@
 - [x] Create and publish project
 - [x] add github CI to run test suite on push
   - tests runs on linux, mac, windows
+- [x] save feature and serialize to string
+- [x] basic Containerfile, Dockerfile parsing
+  - [x] improve parsing, COMMENT should become #
+
 
 
 
