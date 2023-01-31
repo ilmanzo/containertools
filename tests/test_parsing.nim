@@ -1,6 +1,5 @@
 import unittest2
 import containertools
-from sequtils import zip
 
 # helper to compare two spec files
 # TODO: need to work on payload compare
