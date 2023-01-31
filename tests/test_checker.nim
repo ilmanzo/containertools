@@ -27,6 +27,23 @@ suite "Basic self-check test":
       CMD @["/usr/bin/wc", "--help"]
     check: not image.isValid
 
+  test "container with FROM as first line should be valid":
+    let image = container:
+      FROM "alpine"
+      COMMENT "this is only a test"
+      COMMENT "to check if anything wrong"
+      CMD "/bin/bash"
+    check: image.isValid
+
+  test "container with a comment before FROM should be valid":
+    let image = container:
+      COMMENT "this is only a test"
+      COMMENT "to check if anything wrong"
+      FROM "alpine"
+      CMD "/bin/bash"
+    check: image.isValid
+
+
 
 
 

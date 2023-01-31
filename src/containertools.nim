@@ -66,8 +66,11 @@ proc isValid*(self: ContainerSpec): bool =
       of FROM: foundFROM = true
       of CMD, ENTRYPOINT:
         foundCMD_or_ENTRYPOINT = true
-        firstFOUND = false
-      else: firstFOUND = false
+        if not foundFROM:
+          firstFOUND = false
+      else:
+        if not foundFROM:
+          firstFOUND = false
   result = foundFROM and foundCMD_or_ENTRYPOINT and firstFOUND
 
 # instead of writing a bunch of templates, like
