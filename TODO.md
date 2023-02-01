@@ -3,11 +3,12 @@
 - [ ] tidy: remove duplicates, ex. merge consequent "RUN" lines
 - [ ] add build feature that permits to run our image
   - remember to use -p for any EXPOSEd port
-- [ ] add example and documentation
+- [ ] add examples and documentation
 - [ ] define syntax validation rules and error reporting
   - some examples:  https://github.com/marquesmps/dockerfile_validator/blob/develop/src/rule_files/default_rules.yaml
   - https://github.com/hadolint/hadolint
 - [ ] check for leaked secrets in ENV
+- [ ] publish package on nimble https://github.com/nim-lang/nimble#creating-packages
 
 ## In progress
 
