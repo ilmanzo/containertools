@@ -1,0 +1,6 @@
+FROM debian:latest
+WORKDIR /app
+RUN git clone https://some.project.git
+RUN cd project
+RUN make
+RUN mv ./binary /usr/bin/

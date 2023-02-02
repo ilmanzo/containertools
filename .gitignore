@@ -4,5 +4,5 @@ htmldocs/
 # ignore any binaries but include test source code
 tests/*
 !tests/*.nim*
-
+!tests/data
 
