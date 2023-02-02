@@ -11,16 +11,16 @@ proc isValid*(self: ContainerSpec): bool =
   var foundCMD_or_ENTRYPOINT: bool = false
   var firstFOUND = true
   for item in self:
-    case item.cmd
-      of COMMENT: continue
-      of FROM: foundFROM = true
-      of CMD, ENTRYPOINT:
-        foundCMD_or_ENTRYPOINT = true
-        if not foundFROM:
-          firstFOUND = false
-      else:
-        if not foundFROM:
-          firstFOUND = false
+    let instr = item.cmd
+    if instr == COMMENT:
+      continue # skip any comments
+    if instr == FROM:
+      foundFROM = true
+      continue
+    if instr == CMD or instr == ENTRYPOINT:
+      foundCMD_or_ENTRYPOINT = true
+    if not foundFROM:
+      firstFOUND = false
   result = foundFROM and foundCMD_or_ENTRYPOINT and firstFOUND
 
 proc save*(self: ContainerSpec, filename: string) = writeFile(filename, $self)
