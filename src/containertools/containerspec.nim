@@ -1,6 +1,6 @@
 import std/sequtils
-from std/strutils import join, startsWith, strip, split, parseEnum
-import specitem
+from std/strutils import join, startsWith, strip, split
+import instruction
 
 # returns string representation of a complete container image
 proc `$`*(self: ContainerSpec): string = self.mapIt($it).join("\n")
@@ -11,7 +11,7 @@ proc isValid*(self: ContainerSpec): bool =
   var foundCMD_or_ENTRYPOINT: bool = false
   var firstFOUND = true
   for item in self:
-    case item.instr
+    case item.cmd
       of COMMENT: continue
       of FROM: foundFROM = true
       of CMD, ENTRYPOINT:
@@ -27,15 +27,20 @@ proc save*(self: ContainerSpec, filename: string) = writeFile(filename, $self)
 
 proc fromFile*(filename: string): ContainerSpec =
   for line in filename.lines:
-    let tokens = line.strip().split(' ', 2)
-    if line.startsWith("#"):
-      result.add(SpecItem(instr: COMMENT, kind: Ak_string,
-          str_val: tokens[1]))
-      continue
-    let parsed_instr = parseEnum[BuildInstruction](tokens[0])
-    result.add(SpecItem(
-        instr: parsed_instr, kind: Ak_string,
-        str_val: tokens[1]))
+    result.add instruction.parse(line)
 
-
+# look for consecutive RUN commands and merge all in one
+proc consolidate*(src: ContainerSpec): ContainerSpec =
+  var commands: seq[string]
+  for item in src:
+    if item.cmd == RUN:
+      commands.add item.str_val
+    else:
+      if commands.len > 0:
+        result.add Instruction(cmd: RUN, kind: Ak_string,
+            str_val: commands.join(" && "))
+        commands.setLen 0
+      result.add item
+  if commands.len > 0:
+    result.add Instruction(cmd: RUN, kind: Ak_string, str_val: commands.join(" && "))
 

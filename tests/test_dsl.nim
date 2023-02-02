@@ -25,8 +25,8 @@ suite "Basic dsl test":
   test "can create basic container":
     let image = container:
       FROM "opensuse/leap"
-      CMD "echo Hello" # CMD will be auto-splitted in an array
-    check: image.equalToReference("reference/Containerfile.hello")
+      CMD "echo Hello"
+    check: image.equalToReference("tests/data/Containerfile.hello")
 
   test "can create containers with exposed port":
     let image = container:
@@ -35,7 +35,7 @@ suite "Basic dsl test":
       RUN "npm install"
       EXPOSE 3000
       CMD @["node", "index.js"]
-    check: image.equalToReference("reference/Containerfile.unoptimized.nodejs")
+    check: image.equalToReference("tests/data/Containerfile.unoptimized.nodejs")
 
   test "can create image with env variables":
     let image = container:
@@ -44,7 +44,7 @@ suite "Basic dsl test":
       WORKDIR "${FOO}"
       ADD ". $FOO"
       COPY "$FOO /quux"
-    check: image.equalToReference("reference/Containerfile.withenv")
+    check: image.equalToReference("tests/data/Containerfile.withenv")
 
 suite "Dynamic dsl test":
   test "can make conditional containers":
@@ -61,8 +61,8 @@ suite "Dynamic dsl test":
           LABEL "Environment=DEV"
           RUN "zypper install nginx-testing"
     check: images.len == 4
-    let referenceobj = SpecItem(instr: BuildInstruction.LABEL, kind: Ak_string,
-        str_val: "Environment=PROD")
+    let referenceobj = Instruction(cmd: BuildInstruction.LABEL,
+        kind: Ak_string, str_val: "Environment=PROD")
     check: images[0][2] == referenceobj
 
 

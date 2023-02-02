@@ -1,6 +1,5 @@
 ## Todo
 
-- [ ] tidy: remove duplicates, ex. merge consequent "RUN" lines
 - [ ] add build feature that permits to run our image
   - remember to use -p for any EXPOSEd port
 - [ ] add examples and documentation
@@ -8,13 +7,11 @@
   - some examples:  https://github.com/marquesmps/dockerfile_validator/blob/develop/src/rule_files/default_rules.yaml
   - https://github.com/hadolint/hadolint
 - [ ] check for leaked secrets in ENV
-- [ ] publish package on nimble https://github.com/nim-lang/nimble#creating-packages
+- [ ] add more tests
 
 ## In progress
 
-- [ ] add more tests
-- [ ] implement more instructions
-  - dockerfile syntax reference: https://docs.docker.com/engine/reference/builder/
+- [ ] publish package on nimble https://github.com/nim-lang/nimble#creating-packages
 
 ## Done ✓
 
@@ -24,6 +21,9 @@
 - [x] save feature and serialize to string
 - [x] basic Containerfile, Dockerfile parsing
   - [x] improve parsing, COMMENT should become #
+- [x] implement more instructions
+  - dockerfile syntax reference: https://docs.docker.com/engine/reference/builder/
+- [x] tidy: remove duplicates, ex. merge consequent "RUN" lines
 
 
 

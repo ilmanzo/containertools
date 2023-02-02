@@ -6,4 +6,5 @@ suite "save feature":
     let image = container:
       FROM "opensuse/leap"
       CMD "echo Hello" # CMD will be auto-splitted in an array
-    image.save("Containerfile.basic")
+    image.save("tests/data/Containerfile.basic")
+

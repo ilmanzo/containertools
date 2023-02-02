@@ -1,4 +1,0 @@
-# this is a simple containerfile
-FROM opensuse/leap
-# with comments added
-CMD ["echo","Hello"]
