@@ -1,6 +1,7 @@
 import unittest2
 import containertools
 
+
 suite "parse single line":
   test "can parse some instruction":
     let testTable = [
@@ -13,7 +14,9 @@ suite "parse single line":
       ("COPY start.sh start.sh", Instruction(cmd: BuildInstruction.COPY,
           kind: Ak_string, str_val: "start.sh start.sh")),
       ("RUN rm /usr/sbin/policy-rc.d", Instruction(cmd: BuildInstruction.RUN,
-          kind: Ak_string, str_val: "rm /usr/sbin/policy-rc.d"))
+          kind: Ak_string, str_val: "rm /usr/sbin/policy-rc.d")),
+      ("EXPOSE 8080", Instruction(cmd: BuildInstruction.EXPOSE, kind: Ak_int,
+          int_val: 8080))
     ]
     for items in testTable:
       check: items[0].parse == items[1]

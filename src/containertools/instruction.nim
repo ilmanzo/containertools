@@ -52,6 +52,14 @@ proc `$`*(self: Instruction): string =
 proc unquote(s: string): seq[string] =
   result = s.strip[1..^2].split(',').mapIt(it.strip[1..^2])
 
+proc isNumeric(x: string): bool =
+  try:
+    discard parseInt(x)
+    result = true
+  except ValueError:
+    result = false
+
+
 # parse a string into a Instruction
 proc parse*(str: string): Instruction =
   let tokens = str.strip().split(maxsplit = 1)
@@ -62,6 +70,9 @@ proc parse*(str: string): Instruction =
   if (parsed_instr == CMD or parsed_instr == RUN or parsed_instr ==
       ENTRYPOINT) and arg.startsWith('['):
     return Instruction(cmd: parsed_instr, kind: Ak_array, array_val: unquote(arg))
+  if parsed_instr == EXPOSE and arg.isNumeric:
+    return Instruction(cmd: EXPOSE, kind: Ak_int, int_val: uint16(
+        arg.parseInt)) # TODO: can overflow
   result = Instruction(cmd: parsed_instr, kind: Ak_string, str_val: arg)
 
 

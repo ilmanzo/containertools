@@ -1,7 +1,5 @@
 ## Todo
 
-- [ ] add build feature that permits to run our image
-  - remember to use -p for any EXPOSEd port
 - [ ] add examples and documentation
 - [ ] define syntax validation rules and error reporting
   - some examples:  https://github.com/marquesmps/dockerfile_validator/blob/develop/src/rule_files/default_rules.yaml
@@ -11,7 +9,10 @@
 
 ## In progress
 
-- [ ] publish package on nimble https://github.com/nim-lang/nimble#creating-packages
+- [ ] add build feature that permits to run our image
+  - remember to use -p for any EXPOSEd port
+- [x] publish package on nimble https://github.com/nim-lang/nimble#creating-packages
+  - PR done on https://github.com/nim-lang/packages, waiting for merge
 
 ## Done ✓
 
