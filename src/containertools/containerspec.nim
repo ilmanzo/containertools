@@ -47,7 +47,7 @@ proc consolidate*(src: ContainerSpec): ContainerSpec =
 
 # draft implementation ,work in progress
 proc build*(c: ContainerSpec) =
-  let output, exitCode = execCmdex(command = "podman build -f -", input = $c)
+  let (output, exitCode) = execCmdex(command = "podman build -f -", input = $c)
   if exitCode == 0:
     echo "Your container image is built"
     echo output
