@@ -6,3 +6,4 @@ tests/*
 !tests/*.nim*
 !tests/data
 
+examples/hello_container/hello
