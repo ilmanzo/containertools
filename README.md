@@ -41,5 +41,5 @@ for i in countup(0, 3):
         ENV &"buildno={i}.1"
         LABEL "Environment=DEV"
         RUN "zypper install nginx-testing"
-images.mapIt(push(it,MY_REGISTRY)) # pushes all to remote registry
+#images.mapIt(push(it,MY_REGISTRY)) # pushes all to remote registry
 ```

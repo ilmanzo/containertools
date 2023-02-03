@@ -11,8 +11,6 @@
 
 - [ ] add build feature that permits to run our image
   - remember to use -p for any EXPOSEd port
-- [x] publish package on nimble https://github.com/nim-lang/nimble#creating-packages
-  - PR done on https://github.com/nim-lang/packages, waiting for merge
 
 ## Done ✓
 
@@ -25,6 +23,10 @@
 - [x] implement more instructions
   - dockerfile syntax reference: https://docs.docker.com/engine/reference/builder/
 - [x] tidy: remove duplicates, ex. merge consequent "RUN" lines
+- [x] publish package on nimble https://github.com/nim-lang/nimble#creating-packages
+  - PR merged  on https://github.com/nim-lang/packages
+  - package is online at  https://nimble.directory/search?query=containertools
+  
 
 
 

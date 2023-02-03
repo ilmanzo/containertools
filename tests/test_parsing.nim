@@ -16,7 +16,10 @@ suite "parse single line":
       ("RUN rm /usr/sbin/policy-rc.d", Instruction(cmd: BuildInstruction.RUN,
           kind: Ak_string, str_val: "rm /usr/sbin/policy-rc.d")),
       ("EXPOSE 8080", Instruction(cmd: BuildInstruction.EXPOSE, kind: Ak_int,
-          int_val: 8080))
+          int_val: 8080)),
+      ("EXPOSE 53/udp", Instruction(cmd: BuildInstruction.EXPOSE,
+          kind: Ak_string, str_val: "53/udp"))
+
     ]
     for items in testTable:
       check: items[0].parse == items[1]

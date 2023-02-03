@@ -1,5 +1,6 @@
 import std/sequtils
 from std/strutils import join, startsWith, strip, split
+from std/osproc import execCmdex
 import instruction
 
 # returns string representation of a complete container image
@@ -43,4 +44,12 @@ proc consolidate*(src: ContainerSpec): ContainerSpec =
       result.add item
   if commands.len > 0:
     result.add Instruction(cmd: RUN, kind: Ak_string, str_val: commands.join(" && "))
+
+# draft implementation ,work in progress
+proc build*(c: ContainerSpec) =
+  let output, exitCode = execCmdex(command = "podman build -f -", input = $c)
+  if exitCode == 0:
+    echo "Your container image is built"
+    echo output
+
 
